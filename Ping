@@ -1,0 +1,44 @@
+            int timeout = 10000;   //in ms
+            Ping p = new Ping();
+
+            for(int i = 0; i < Rechner.Count; i++)
+            {
+                try
+                {
+                    PingReply rep = p.Send(Rechner[i], timeout);
+
+                    if (rep.Status == IPStatus.Success)
+                    {}
+                    else
+                    {
+                        
+                        OleDbCommand cmd = con.CreateCommand();
+
+                        string Rechner = "irgendwas";
+                        string Befehl_IPSQ_Bestandsliste = "SELECT * FROM IPSQ_Bestandsliste Where Rechner = '" + Rechner[i] + "'";
+
+                        OleDbCommand command2 = new OleDbCommand(Befehl_IPSQ_Bestandsliste, con);
+
+                            con.Open();
+                            // Execute command
+                            using (OleDbDataReader reader2 = command2.ExecuteReader())
+
+                            {
+                                while (reader2.Read())
+                                {
+                                    Rechner = reader2["Rechner"].ToString();
+
+                                    listBox1.Items.Add(Rechner[i]);
+                                }
+                            }
+
+                        con.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    listBox1.Items.Add(Rechner[i]);
+                }
+
+            }
+            MessageBox.Show("Ping abgeschlossen.");
